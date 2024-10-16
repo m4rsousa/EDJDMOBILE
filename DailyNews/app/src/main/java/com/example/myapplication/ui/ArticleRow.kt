@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.ui
+package com.example.myapplication.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.myapplication.R
 import com.example.myapplication.models.Article
-import com.example.myapplication.ui.ui.themes.MyApplicationTheme
+import com.example.myapplication.ui.theme.MyApplicationTheme
 import java.util.Date
 
 @Composable
@@ -38,12 +38,17 @@ fun ArticleRow( article: Article) {
             AsyncImage(
                 model = it,
                 contentDescription = "descricao imagem",
-                modifier = Modifier.padding(4.dp).width(100.dp).height(100.dp),
+                modifier = Modifier
+                    .padding(6.dp)
+                    .width(120.dp)
+                    .height(120.dp),
 
             )
         } ?: run {
             Image(
-            modifier = Modifier.width(100.dp).height(100.dp),
+            modifier = Modifier
+                .width(100.dp)
+                .height(100.dp),
             painter = painterResource(id = R.drawable.baseline_image_search_24),
             contentDescription = "image article"
         )}

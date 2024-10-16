@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.ui
+package com.example.myapplication.ui
 
 import androidx.compose.runtime.Composable
 import java.lang.reflect.Modifier

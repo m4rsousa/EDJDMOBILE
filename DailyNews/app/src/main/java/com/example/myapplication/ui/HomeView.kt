@@ -1,4 +1,4 @@
-package com.example.myapplication.ui.ui
+package com.example.myapplication.ui
 
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -11,7 +11,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapplication.models.Article
-import com.example.myapplication.ui.ui.themes.MyApplicationTheme
+import com.example.myapplication.ui.theme.MyApplicationTheme
 import okhttp3.OkHttpClient
 import okhttp3.Call
 import okhttp3.Callback

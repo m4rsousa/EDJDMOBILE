@@ -2,88 +2,231 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableDoubleStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.calculator.CalcButton
 import com.example.calculator.Greeting
 import com.example.calculator.ui.theme.CalculatorTheme
-import com.example.calculator.ui.theme.Purple40
+import java.math.BigDecimal
 
 
 @Composable
-fun CalculatorScreen(modifier : Modifier = Modifier) {
-    var backButtonColor = ButtonDefaults.run{ buttonColors(Purple40) }
-    var num by remember { mutableStateOf("") }
-    var show by remember { mutableStateOf("") }
-    val buttonClick:()->Unit= {show="$num"}
-    Column (modifier = modifier.padding(16.dp)
-        .fillMaxSize(),verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally){
-        Text(text = "0")
-        Row {
-            Button(onClick = buttonClick) {
-                Text(text = "7")
-            }
-            Button(onClick = buttonClick) {
-                Text(text = "8")
-            }
-            Button(onClick = buttonClick) {
-                Text(text = "9")
-            }
-            Button(onClick = buttonClick,colors=backButtonColor,) {
-                Text(text = "x")
-            }
+fun CalculatorScreen(modifier: Modifier = Modifier) {
+    //var backButtonColor = ButtonDefaults.run{ buttonColors(Purple40) }
+    var display by remember { mutableStateOf("0") }
+    var op1 by remember { mutableStateOf(BigDecimal(0.0)) }
+    var operation by remember { mutableStateOf("") }
 
-        }
-        Row {
-            Button(onClick = buttonClick) {
-                Text(text = "4")
+    fun onButtonClick(clickedButtonText: String) {
+        when(clickedButtonText){
+            "AC"->{
+                display="0"
+                op1=BigDecimal(0.0)
+                operation=""
             }
-            Button(onClick = buttonClick) {
-                Text(text = "5")
+            "+/-"->{
+                // Toggle sign
+                display = if (display.startsWith("-")) display.substring(1) else "-$display"
             }
-            Button(onClick = buttonClick) {
-                Text(text = "6")
+            "%"->{
+                // Calculate percentage
+                val percentage = display.toDoubleOrNull() ?: 0.0
+                display = (percentage / 100).toString()
             }
-            Button(onClick = buttonClick,colors=backButtonColor,) {
-                Text(text = "-")
+            "⌫"->{
+
             }
-        }
-        Row {
-            Button(onClick = buttonClick) {
-                Text(text = "1")
+            "."->{
+                if(!display.contains(".")){
+                    display+="."
+                }
             }
-            Button(onClick = buttonClick) {
-                Text(text = "2")
+            "+","-","x","÷"->{
+                op1 = BigDecimal(display)
+                operation = clickedButtonText
+                display = ""
             }
-            Button(onClick = buttonClick) {
-                Text(text = "3")
+            "="->{
+                val op2 = BigDecimal(display)
+                if (operation.isNotEmpty()) {
+                    try {
+                        op1 = when (operation) {
+                            "+" -> op1.add(op2)
+                            "-" -> op1.subtract(op2)
+                            "x" -> op1.multiply(op2)
+                            "÷" -> op1.divide(op2)
+                            else -> BigDecimal(0.0)
+                        }
+                    } catch (e: ArithmeticException) {
+                        display = "Error"
+                    }
+                    display = op1.toString()
+                }
+                operation=""
             }
-            Button(onClick = buttonClick,colors=backButtonColor,) {
-                Text(text = "+")
-            }
-        }
-        Row {
-            Button(onClick = buttonClick ) {
-                Text(text = "0")
-            }
-            Button(onClick = buttonClick,colors=backButtonColor,) {
-                Text(text = "=")
+            else -> {
+                if (display == "0" && clickedButtonText.all { it.isDigit() }) {
+                    display = clickedButtonText
+                } else {
+                    display += clickedButtonText
+                }
             }
         }
     }
+
+    Column(
+        modifier = Modifier
+            .padding(10.dp)
+            .fillMaxWidth(),
+        verticalArrangement = Arrangement.Bottom,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        OutlinedTextField(
+            value = display,
+            onValueChange = { /* Handle input if needed */ },
+            readOnly = true, // Make it read-only to prevent direct editing
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(80.dp),
+            textStyle = TextStyle(fontSize = 80.sp, textAlign = TextAlign.Right) // Customize text style
+        )
+//        Text(
+//            modifier = Modifier
+//                .fillMaxSize()
+//                .weight(1f),
+//            textAlign = TextAlign.Right,
+//            text = display,
+//            style = MaterialTheme.typography.displayLarge,
+//        )
+        Row(modifier = Modifier.weight(1f)) {
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "AC",
+                isOperation = true,
+                onClick = { onButtonClick("AC") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "+/-",
+                isOperation = true,
+                onClick = { onButtonClick("+/-") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "%",
+                isOperation = true,
+                onClick = { onButtonClick("%") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "÷",
+                isOperation = true,
+                onClick = { onButtonClick("÷") })
+        }
+        Row(modifier = Modifier.weight(1f)) {
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "7",
+                isOperation = false,
+                onClick = { onButtonClick("7") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "8",
+                isOperation = false,
+                onClick = { onButtonClick("8") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "9",
+                isOperation = false,
+                onClick = { onButtonClick("9") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "x",
+                isOperation = true,
+                onClick = { onButtonClick("x") })
+        }
+        Row(modifier = Modifier.weight(1f)) {
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "4",
+                isOperation = false,
+                onClick = { onButtonClick("4") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "5",
+                isOperation = false,
+                onClick = { onButtonClick("5") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "6",
+                isOperation = false,
+                onClick = { onButtonClick("6") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "-",
+                isOperation = true,
+                onClick = { onButtonClick("-") })
+        }
+        Row(modifier = Modifier.weight(1f)) {
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "1",
+                isOperation = false,
+                onClick = { onButtonClick("1") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "2",
+                isOperation = false,
+                onClick = { onButtonClick("2") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "3",
+                isOperation = false,
+                onClick = { onButtonClick("3") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "+",
+                isOperation = true,
+                onClick = { onButtonClick("+") })
+
+        }
+        Row(modifier = Modifier.weight(1f)) {
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = ".",
+                isOperation = false,
+                onClick = { onButtonClick(".") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "0",
+                isOperation = false,
+                onClick = { onButtonClick("0") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "⌫",
+                isOperation = false,
+                onClick = { onButtonClick("⌫") })
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "=",
+                isOperation = true,
+                onClick = { onButtonClick("=") })
+        }
+    }
 }
-@Preview(showBackground = true)
+
 @Composable
 fun CalculatorPreview() {
     CalculatorTheme {

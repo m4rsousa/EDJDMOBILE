@@ -1,7 +1,7 @@
-package com.example.myapplication.ui.ui
+package com.example.myapplication.ui
 
 import androidx.compose.runtime.mutableStateOf
-import com.example.myapplication.ui.ui.themes.Article
+import com.example.myapplication.ui.theme.Article
 var articles = mutableStateOf(listOf<Article>())
     private set
 var isLoading = mutableStateOf(false)
