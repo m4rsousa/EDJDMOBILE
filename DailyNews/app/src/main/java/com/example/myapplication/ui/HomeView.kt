@@ -12,6 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.myapplication.models.Article
 import com.example.myapplication.ui.theme.MyApplicationTheme
+import androidx.navigation.NavHostController
 import okhttp3.OkHttpClient
 import okhttp3.Call
 import okhttp3.Callback
@@ -21,12 +22,12 @@ import okio.IOException
 import org.json.JSONArray
 
 @Composable
-fun HomeView( modifier: Modifier = Modifier) {
+fun HomeView( modifier: Modifier = Modifier,navController:NavHostController) {
 
    var articles by remember { mutableStateOf(listOf<Article>())}
-    LazyColumn {
+    LazyColumn(){
         itemsIndexed(items=articles){ index,article ->
-            ArticleRow(article=article)
+            ArticleRow(article=article,navController)
         }
     }
     LaunchedEffect(Unit){
@@ -59,18 +60,6 @@ fun HomeView( modifier: Modifier = Modifier) {
         })
     }
 }
-
-
-@Preview(showBackground=true)
-@Composable
-fun HomeViewPreview(){
-    MyApplicationTheme(){
-        HomeView()
-    }
-}
-
-
-
 
 
 

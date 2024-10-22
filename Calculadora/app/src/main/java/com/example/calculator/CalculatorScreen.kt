@@ -3,7 +3,9 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -49,7 +51,12 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
                 display = (percentage / 100).toString()
             }
             "⌫"->{
-
+                if (display.isNotEmpty()) {
+                    display = display.dropLast(1)
+                    if (display.isEmpty()) {
+                        display = "0"
+                    }
+                    }
             }
             "."->{
                 if(!display.contains(".")){
@@ -101,8 +108,8 @@ fun CalculatorScreen(modifier: Modifier = Modifier) {
             onValueChange = { /* Handle input if needed */ },
             readOnly = true, // Make it read-only to prevent direct editing
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(80.dp),
+                .width(500.dp).height(250.dp)
+                .padding(20.dp,50.dp),
             textStyle = TextStyle(fontSize = 80.sp, textAlign = TextAlign.Right) // Customize text style
         )
 //        Text(
