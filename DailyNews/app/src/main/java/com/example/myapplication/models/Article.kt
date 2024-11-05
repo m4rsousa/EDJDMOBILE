@@ -13,7 +13,7 @@ class Article(var title: String?=null,
     companion object{
         fun fromJson(json: JSONObject):Article {
             return Article(
-                title = json.getString("titulo"),
+                title = json.getString("cleanTitle"),
                 description = json.getString("descricao"),
                 urlToImage = json.getString("multimediaPrincipal"),
                 url = json.getString("url"),

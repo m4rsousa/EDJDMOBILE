@@ -9,32 +9,46 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.myapplication.models.Article
-import com.example.myapplication.ui.theme.MyApplicationTheme
 import androidx.navigation.NavHostController
-import okhttp3.OkHttpClient
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.myapplication.Screen
+import com.example.myapplication.enums.NewsCategory
+import com.example.myapplication.models.Article
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
 import okio.IOException
 import org.json.JSONArray
 
 @Composable
-fun HomeView( modifier: Modifier = Modifier,navController:NavHostController) {
+fun HomeView(
+    modifier: Modifier = Modifier,
+    navController: NavHostController,
+    category: NewsCategory
+) {
 
-   var articles by remember { mutableStateOf(listOf<Article>())}
-    LazyColumn(){
-        itemsIndexed(items=articles){ index,article ->
-            ArticleRow(article=article,navController)
+    var articles by remember { mutableStateOf(listOf<Article>()) }
+    val currentRoute = currentRoute(navController) // Get current route
+
+    LazyColumn() {
+        itemsIndexed(items = articles) { index, article ->
+            ArticleRow(article = article, navController)
         }
     }
-    LaunchedEffect(Unit){
+    LaunchedEffect(Unit) {
         val client = OkHttpClient()
 
+        val tag = when (category) {
+            NewsCategory.LATEST -> "ultimas"
+            NewsCategory.HEALTH -> "saude"
+            NewsCategory.POLITICS -> "politica"
+            NewsCategory.SPORTS -> "desporto"
+        }
+
         val request = Request.Builder()
-            .url("https://www.publico.pt/api/list/ultimas")
+            .url("https://www.publico.pt/api/list/$tag")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
@@ -59,6 +73,12 @@ fun HomeView( modifier: Modifier = Modifier,navController:NavHostController) {
             }
         })
     }
+}
+
+@Composable
+private fun currentRoute(navController: NavHostController): String {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    return navBackStackEntry?.destination?.route ?: Screen.Home.route
 }
 
 
