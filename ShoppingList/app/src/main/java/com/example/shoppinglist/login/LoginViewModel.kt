@@ -1,4 +1,4 @@
-package com.example.shoppinglist
+package com.example.shoppinglist.login
 
 import android.content.ContentValues.TAG
 import android.util.Log

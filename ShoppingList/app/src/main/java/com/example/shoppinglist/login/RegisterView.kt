@@ -1,11 +1,13 @@
-package com.example.shoppinglist
+package com.example.shoppinglist.login
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -36,10 +38,9 @@ fun RegisterView(
         onEmailChange = viewModel::onEmailChange,
         onPasswordChange = viewModel::onPasswordChange,
         onConfirmPasswordChange = viewModel::onConfirmPasswordChange,
-        onRegisterClick = { viewModel.onRegisterClick {
-            onRegisterSuccess()
-            navController.navigate(Screen.Login.route)
-        }}
+        onRegisterClick = {
+            viewModel.onRegisterClick(onRegisterSuccess)
+        }
     )
 
 }
@@ -72,7 +73,8 @@ fun RegisterView(
             TextField(
                 value = state.password,
                 onValueChange = { onPasswordChange(it) },
-                placeholder = { Text("Password") }
+                placeholder = { Text("Password") },
+                visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
             )
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -80,12 +82,20 @@ fun RegisterView(
             TextField(
                 value = state.confirmPassword,
                 onValueChange = { onConfirmPasswordChange(it) },
-                placeholder = { Text("Confirm Password") }
+                placeholder = { Text("Confirm Password") },
+                visualTransformation = androidx.compose.ui.text.input.PasswordVisualTransformation(),
             )
             Spacer(modifier = Modifier.height(16.dp))
 
             // Register Button
             Button(
+                modifier= Modifier
+                    .padding(16.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF6650a4),
+                    contentColor = Color.White,
+                    disabledContainerColor = Color.Gray,
+                ),
                 onClick = {
                     onRegisterClick()
 

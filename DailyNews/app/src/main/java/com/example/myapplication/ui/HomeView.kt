@@ -26,7 +26,7 @@ import org.json.JSONArray
 fun HomeView(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    category: NewsCategory
+    category: NewsCategory,
 ) {
 
     var articles by remember { mutableStateOf(listOf<Article>()) }
@@ -39,12 +39,12 @@ fun HomeView(
     }
     LaunchedEffect(Unit) {
         val client = OkHttpClient()
-
         val tag = when (category) {
             NewsCategory.LATEST -> "ultimas"
             NewsCategory.HEALTH -> "saude"
             NewsCategory.POLITICS -> "politica"
             NewsCategory.SPORTS -> "desporto"
+            NewsCategory.FAVORITES -> "favoritos"
         }
 
         val request = Request.Builder()

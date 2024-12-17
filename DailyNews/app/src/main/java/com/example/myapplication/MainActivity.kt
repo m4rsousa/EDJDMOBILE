@@ -7,13 +7,10 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.getValue
+import androidx.compose.material3.Text
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.capitalize
-import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -33,9 +30,10 @@ class MainActivity : ComponentActivity() {
             MyApplicationTheme {
                 val navController = rememberNavController()
                 val currentNewsCategory = remember { mutableStateOf(NewsCategory.LATEST) }
+                val isArticleDetailScreen = remember { mutableStateOf(false) }
                 Scaffold(
                     modifier = Modifier.fillMaxSize(),
-                    topBar = { TopBarNav(currentNewsCategory.value) },
+                    topBar = { TopBarNav(currentNewsCategory.value, navController, isArticleDetailScreen) },
                     bottomBar = { BottomBarNav(navController) }
                 ) { innerPadding ->
                     NavHost(
@@ -46,15 +44,22 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Home.route) { backStackEntry ->
                             val categoryArg = backStackEntry.arguments?.getString("category")?.uppercase()
                             currentNewsCategory.value = NewsCategory.valueOf(categoryArg ?: "LATEST")
+                            isArticleDetailScreen.value = false
                             HomeView(
                                 navController = navController,
                                 category = currentNewsCategory.value
                             )
                         }
+                        composable(Screen.Favorites.route) {
+                            Text("Favorites")
+                        }
                         composable(Screen.ArticleDetail.route) { backStackEntry ->
                             val url = backStackEntry.arguments?.getString("url")
+
                             if (!url.isNullOrEmpty()) {
                                 ArticleDetail(url)
+                                isArticleDetailScreen.value = true
+
                             }
                         }
                     }
@@ -70,6 +75,7 @@ sealed class Screen(val route: String) {
     object Health : Screen("home/health")
     object Politics : Screen("home/politics")
     object Sports : Screen("home/sports")
+    object Favorites : Screen("favorites")
     object ArticleDetail : Screen("article_detail?url={url}") {
         fun createRoute(url: String?) = "article_detail?url=$url"
     }

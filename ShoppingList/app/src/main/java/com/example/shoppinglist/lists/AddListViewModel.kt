@@ -31,7 +31,7 @@ class AddListViewModel : ViewModel(){
             "name" to state.value.name,
             "owners" to arrayListOf(userId?:"")
         )
-        db.collection("com/example/shoppinglist/lists")
+        val addOnFailureListener = db.collection("lists")
             .add(data)
             .addOnSuccessListener { documentReference ->
                 Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")

@@ -1,4 +1,4 @@
-package com.example.shoppinglist.lists
+package com.example.shoppinglist.models
 
 data class ListItems (
     var docId : String?,

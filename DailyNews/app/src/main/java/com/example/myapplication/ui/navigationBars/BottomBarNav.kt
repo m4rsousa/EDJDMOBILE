@@ -1,26 +1,19 @@
 package com.example.myapplication.ui.navigationBars
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.myapplication.R
@@ -55,6 +48,12 @@ fun BottomBarNav(navController: NavHostController) {
             title = "Sports",
             icon = ImageVector.vectorResource(id = R.drawable.sports),
             screen = Screen.Sports
+        ),
+
+        BottomNavItem(
+            title = "Favorites",
+            icon = ImageVector.vectorResource(id = R.drawable.filledfavorite),
+            screen = Screen.Favorites
         )
     )
     NavigationBar(containerColor = Color(0xFF221931))

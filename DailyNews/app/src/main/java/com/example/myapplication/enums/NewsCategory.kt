@@ -4,5 +4,6 @@ enum class NewsCategory {
     LATEST,
     HEALTH,
     POLITICS,
-    SPORTS
+    SPORTS,
+    FAVORITES
 }
